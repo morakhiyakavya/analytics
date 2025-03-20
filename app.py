@@ -1,11 +1,21 @@
 from flask import Flask, request
 from models.analytics import db, log_request
 from routes.main import main_bp
-from config import Config
+from config import DevelopmentConfig, ProductionConfig
+from dotenv import load_dotenv
 import time
+import os
+
+
+# Load environment variables
+load_dotenv()
 
 app = Flask(__name__)
-app.config.from_object(Config)
+# Use the appropriate config based on the environment
+if os.getenv('FLASK_ENV') == 'production':
+    app.config.from_object(ProductionConfig)
+else:
+    app.config.from_object(DevelopmentConfig)
 
 # Initialize the database
 db.init_app(app)
