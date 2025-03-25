@@ -1,3 +1,55 @@
+# user_models.py
+from ast import Pass
+import time
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.sql import func
+from flask import request
+from create_app import db
+import bcrypt
+
+
+# 1. UserSession Table (Tracks session metadata)
+class UserSession(db.Model):
+    __tablename__ = 'user_sessions'
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)  # Optional for anonymous users
+    session_id = db.Column(db.String(128), unique=True, nullable=False)
+    ip_address = db.Column(db.String(50))
+    user_agent = db.Column(db.String(300))
+    start_time = db.Column(db.DateTime, default=db.func.current_timestamp())
+    end_time = db.Column(db.DateTime, nullable=True)
+    location = db.Column(db.String(255))  # Geolocation info (optional)
+    pages_visited = db.Column(db.Text)  # List of pages visited in this session (JSON or text)
+
+    user = db.relationship('User', backref='sessions', lazy=True)
+
+    def __init__(self, session_id, ip_address, user_agent, location=None):
+        self.session_id = session_id
+        self.ip_address = ip_address
+        self.user_agent = user_agent
+        self.location = location
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # from flask_sqlalchemy import SQLAlchemy
 # from sqlalchemy.sql import func
 
